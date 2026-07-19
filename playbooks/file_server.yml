@@ -1,0 +1,45 @@
+---
+- name: Configure File Server
+  hosts: file
+  become: yes
+
+  tasks:
+
+  - name: Install NFS utilities
+    dnf:
+     name: nfs-utils
+     state: present
+
+  - name: Create shared directory
+    file:
+     path: /shared
+     state: directory
+     owner: root
+     group: root
+     mode: '0777'
+
+  - name: configure NFS exports
+    copy:
+     dest: /etc/exports
+     content: |
+      /shared
+      192.168.56.0/24(rw,sync,no_root_squash)
+ 
+  - name: Enable and start NFS server
+    service:
+     name: nfs-server
+     state: started
+     enabled: yes
+
+  - name: Enable NFS through firewall
+    shell: |
+     firewall-cmd --permanent --add-service=nfs
+     firewall-cmd --reload
+
+  - name: Verify exported directory
+    command: exportfs -v
+    register: export_result
+
+  - name: Display export information
+    debug:
+     var: export_result.stdout_lines

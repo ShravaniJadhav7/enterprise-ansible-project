@@ -1,0 +1,18 @@
+---
+- name: Deploy backup Script
+  hosts: backup
+  become: yes
+
+  tasks:
+
+   - name: Create backup script
+     copy:
+      dest: /opt/scripts/backup.sh
+      mode: '0755'
+      content: |
+       #!/bin/bash
+       echo "==========$(date)==========">> /var/log/backup.log
+       echo "Backup started...">> /var/log/backup.log
+       tar -cvzf /backup/shared-backup-$(date +%F-%H%M).tar.gz /shared
+       echo "Backup completed successfully.">> /var/log/backup.log
+       find /backup -name "*.tar.gz" -mtime +7 -delete

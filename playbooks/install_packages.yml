@@ -1,0 +1,16 @@
+---
+- name: install common packages
+  hosts: all
+  become: yes
+
+  tasks:
+
+  - name: install packages
+    yum:
+     name:
+     - vim
+     - tree
+     - wget
+     - git
+     - curl
+     state: present

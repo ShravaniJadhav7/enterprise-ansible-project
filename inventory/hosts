@@ -1,0 +1,16 @@
+[web]
+web.example.com
+[file]
+file.example.com
+[backup]
+backup.example.com
+[servers]
+web.example.com
+file.example.com
+backup.example.com
+ 
+[all:vars]
+ansible_user=ansible
+ansible_become=true
+ansible_become_method=sudo
+

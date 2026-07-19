@@ -1,0 +1,27 @@
+---
+- name: Configure NFS Clients
+  hosts:
+   - web
+   - backup
+  become: yes
+
+  tasks:
+        
+   - name: Install NFS utilities
+     dnf:
+      name: nfs-utils
+      state: present
+
+   - name: Create mount point
+     file:
+      path: /shared
+      state: directory
+
+   - name: Mount NFS share
+     ansible.posix.mount:
+      path: /shared
+      src: 192.168.56.30:/shared
+      fstype: nfs
+      opts: defaults
+      state: mounted
+

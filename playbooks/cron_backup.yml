@@ -1,0 +1,13 @@
+---
+- name: Configure Backup Cron Job
+  hosts: backup
+  become: yes
+
+  tasks:
+
+   - name: Schedule daily backup
+     cron:
+      name: "Daily Backup"
+      minute: "0"
+      hour: "2"
+      job: "/opt/scripts/backup.sh"
